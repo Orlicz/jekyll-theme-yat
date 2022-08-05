@@ -155,9 +155,9 @@ yat:
 
 # Page default value
 # defaults:
-home:
-  heading: "Orlicz"
-  subheading: "oier&learner&student"
+#   home:
+#     heading: "Orlicz"
+#     subheading: "oier&learner&student"
 
 # Banner default settings
 # These banner settings are for global banner default, but you can also
