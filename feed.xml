@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="//github-yet.orlicz.top/jekyll-theme-yat/feed.xml" rel="self" type="application/atom+xml" /><link href="//github-yet.orlicz.top/jekyll-theme-yat/" rel="alternate" type="text/html" /><updated>2024-12-03T13:12:35+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/feed.xml</id><title type="html">Orlicz Space</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Orlicz</name></author><entry><title type="html">Rmq</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/12/03/rmq.html" rel="alternate" type="text/html" title="Rmq" /><published>2024-12-03T00:00:00+00:00</published><updated>2024-12-03T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/12/03/rmq</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/12/03/rmq.html"><![CDATA[<h3 id="rmq">RMQ</h3>
+
+<p>线性RMQ的速度是很差的，原因是，内存是新的硬盘。</p>
+
+<p>我可以在1s内执行1e9次cpu密集的任务，但rmq的瓶颈在于访问内存</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define lg(x) (31^__builtin_clz(x))
+#define ctz __builtin_ctz
+</span><span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="n">maxn</span><span class="p">],</span><span class="n">st</span><span class="p">[</span><span class="n">__lg</span><span class="p">(</span><span class="n">maxn</span><span class="p">)</span><span class="o">-</span><span class="mi">4</span><span class="p">][</span><span class="n">maxn</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">];</span>
+<span class="kt">unsigned</span> <span class="n">msk</span><span class="p">[</span><span class="n">maxn</span><span class="p">];</span>
+<span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+	<span class="kt">unsigned</span> <span class="n">cur</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">bas</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">i</span><span class="o">&amp;</span><span class="mi">31</span><span class="p">))</span><span class="n">cur</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">bas</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">cur</span><span class="o">&amp;&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">a</span><span class="p">[</span><span class="n">bas</span><span class="o">|</span><span class="n">lg</span><span class="p">(</span><span class="n">cur</span><span class="p">)])</span><span class="n">cur</span><span class="o">^=</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="n">lg</span><span class="p">(</span><span class="n">cur</span><span class="p">);</span>
+		<span class="n">msk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">cur</span><span class="o">|=</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">bas</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">bas</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">bas</span><span class="o">+=</span><span class="mi">32</span><span class="p">)</span><span class="n">st</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">bas</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="n">bas</span><span class="o">|</span><span class="n">ctz</span><span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">bas</span><span class="o">|</span><span class="mi">31</span><span class="p">])];</span>
+	<span class="o">--</span><span class="n">n</span><span class="p">;</span><span class="n">st</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">a</span><span class="p">[(</span><span class="n">n</span><span class="o">&amp;~</span><span class="mi">31</span><span class="p">)</span><span class="o">|</span><span class="n">ctz</span><span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">n</span><span class="p">])];</span><span class="n">n</span><span class="o">&gt;&gt;=</span><span class="mi">5</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="o">++</span><span class="n">j</span><span class="p">)</span><span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">],</span><span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))]);</span>
+<span class="p">}</span>
+<span class="k">auto</span> <span class="nf">qmin</span><span class="p">(</span><span class="kt">int</span> <span class="n">l</span><span class="p">,</span><span class="kt">int</span> <span class="n">r</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">ql</span><span class="o">=</span><span class="n">l</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">qr</span><span class="o">=</span><span class="n">r</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ql</span><span class="o">==</span><span class="n">qr</span><span class="p">)</span><span class="k">return</span> <span class="n">a</span><span class="p">[(</span><span class="n">l</span><span class="o">&amp;~</span><span class="mi">31</span><span class="p">)</span><span class="o">|</span><span class="n">ctz</span><span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">l</span><span class="o">&amp;</span><span class="mi">31</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">l</span><span class="o">&amp;</span><span class="mi">31</span><span class="p">))];</span>
+	<span class="cp">#define _0 a[(l&amp;~31)|ctz(msk[l|31]&gt;&gt;(l&amp;31)&lt;&lt;(l&amp;31))]
+</span>	<span class="cp">#define _1 a[(r&amp;~31)|ctz(msk[r])]
+</span>	<span class="k">if</span><span class="p">(</span><span class="n">ql</span><span class="o">+</span><span class="mi">1</span><span class="o">==</span><span class="n">qr</span><span class="p">)</span><span class="k">return</span> <span class="n">min</span><span class="p">(</span><span class="n">_0</span><span class="p">,</span><span class="n">_1</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">g</span><span class="o">=</span><span class="n">lg</span><span class="p">(</span><span class="n">qr</span><span class="o">-</span><span class="n">ql</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="k">auto</span> <span class="n">va</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="n">ql</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">st</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="n">qr</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">g</span><span class="p">)]);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">va</span><span class="o">==</span><span class="n">min</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="n">ql</span><span class="p">],</span><span class="n">st</span><span class="p">[</span><span class="n">g</span><span class="p">][</span><span class="n">qr</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">g</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span><span class="k">return</span> <span class="n">va</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">min</span><span class="p">(</span><span class="n">va</span><span class="p">,</span><span class="n">min</span><span class="p">(</span><span class="n">_0</span><span class="p">,</span><span class="n">_1</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>随机情况下，唐诗的事情是，1024分段然后求解这个的复杂度最好。（1024=sqrt）。</p>
+
+<p>但是为什么要放任一个空间常数巨大的做法呢？</p>
+
+<p>上述的rmq瓶颈在于内存访问。人们难以加快它。如果真的需要加快，可以采用将a和msk等信息并列的方法。（但是不会有多少收益）</p>
+
+<p>这个rmq速度是上乘的，一个优化还是我在github上学习的。</p>
+
+<p>随机rmq没有意义。</p>
+
+<hr />
+
+<p>之前cf有一个好题，内容是，就是昨天的div2</p>
+
+<p>最后一个题目我一下子就做出来了。主要就是线性的。可能的瓶颈是LCA。</p>
+
+<p>转化成有根树，然后考虑对于指定的连通块求解信息。</p>
+
+<p>还好吧。注意今天的cf!
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTQwOTQ5NTk4Ml19
+--></p>]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[RMQ]]></summary></entry><entry><title type="html">Talks</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/12/02/talks.html" rel="alternate" type="text/html" title="Talks" /><published>2024-12-02T00:00:00+00:00</published><updated>2024-12-02T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/12/02/talks</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/12/02/talks.html"><![CDATA[<p>kde is goo
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgzNDk5NjQ0MSwtMjA4ODc0NjYxMl19
+--></p>]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[kde is goo]]></summary></entry><entry><title type="html">Noip</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/noip.html" rel="alternate" type="text/html" title="Noip" /><published>2024-11-30T00:00:00+00:00</published><updated>2024-11-30T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/noip</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/noip.html"><![CDATA[<h2 id="noip">NOIP</h2>
+
+<p>14:32</p>
+
+<p>noip 结束了。真唐。100+100+56+100。大样例我要0.9s，但是山东理工的机子快，也不知道是不是大样例弱小。</p>
+
+<p>人们宣传pak,cak。/se。哈哈哈哈</p>
+
+<p>远离，yuanli, yuan li.
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTEzMDYxODI1NywzMjA3MDE4MTJdfQ==
+--></p>]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[NOIP]]></summary></entry><entry><title type="html">Some Tech</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/some-tech.html" rel="alternate" type="text/html" title="Some Tech" /><published>2024-11-30T00:00:00+00:00</published><updated>2024-11-30T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/some-tech</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/30/some-tech.html"><![CDATA[<h1 id="浅谈一些科技">浅谈一些科技</h1>
+
+<h2 id="本站">本站</h2>
+
+<p>我使用我两年之前的设计，我发现yat主题却是十分简洁大方。</p>
+
+<p>我将会浅谈一些看上去比较需要记住的科技</p>
+
+<p>请及时与我联系。（如果需要。）联系方式是公开发表言论，并且等待我看到的那一天。</p>
+
+<h2 id="spj">spj</h2>
+
+<p>对于spj的书写，往往是搞笑的。因为每个oj都不同。</p>
+
+<p>testlib一家独大，这是不好的。我因此设计了 testlib-lite:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">enum</span> <span class="n">Result</span><span class="p">{</span>
+	<span class="n">_ok</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">_wa</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span><span class="nc">A</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">pit_impl</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="n">it</span><span class="p">,</span><span class="n">A</span><span class="p">...</span><span class="n">a</span><span class="p">){</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">strtok</span><span class="p">(</span><span class="n">it</span><span class="p">,</span><span class="s">"%"</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">(</span><span class="kt">void</span><span class="p">)(</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">...</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">a</span><span class="p">,</span><span class="n">strtok</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">"%"</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="cp">#define pit(a,b...) pit_impl(&amp;(" " a##s[0]),##b)
+#define exit(sig,va...) pit("exit("#sig "): " va),_exit(sig)
+#define sure(cond,va...) !(cond)&amp;&amp;(exit(_wa,"sure("#cond "): " va),1)
+</span><span class="c1">// enum</span>
+<span class="c1">//do not use %%.</span>
+
+<span class="n">ifstream</span> <span class="n">fin</span><span class="p">,</span><span class="n">out</span><span class="p">,</span><span class="n">ans</span><span class="p">;</span>
+<span class="cp">#define cin fin
+</span>
+<span class="kt">void</span> <span class="nf">arginit</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">sure</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">4</span><span class="p">);</span>
+	<span class="n">fin</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">out</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">ans</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+	<span class="n">atexit</span><span class="p">(</span><span class="o">+</span><span class="p">[](){</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="s">"ok "</span><span class="p">;});</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">presol</span><span class="p">(){</span>
+
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="nf">sol</span><span class="p">(</span><span class="n">ifstream</span><span class="o">&amp;</span><span class="n">cin</span><span class="p">){</span>
+
+	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">signed</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="n">pit</span><span class="p">(</span>
+<span class="s">R"(hello!
+"trust spj" by %.
+% is a placement, like % in printf
+systime: %
+argc: %, argv[0]: %
+warning: %
+)"</span><span class="p">,</span><span class="s">"me"</span><span class="p">,</span><span class="sc">'%'</span><span class="p">,</span><span class="sc">'%'</span><span class="p">,</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">"do not using %%, it makes trouble."</span><span class="n">s</span>
+<span class="p">);</span>
+	<span class="n">arginit</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">);</span>
+
+	
+	<span class="c1">// presol();</span>
+	<span class="c1">// sure(sol(out)==sol(ans));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="allocator">allocator</h2>
+
+<p>allocator 是没有意义的，手动实现它没有用处。</p>
+
+<p>但是这确实是一个复杂的项目，对不对啊</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">maxn</span> <span class="o">=</span> <span class="mf">2e5</span><span class="o">+</span><span class="mi">10</span><span class="p">;</span>
+
+<span class="k">constexpr</span> <span class="kt">int</span> <span class="n">G</span><span class="o">=</span><span class="mi">24</span><span class="p">;</span>
+<span class="cp">#define __lg32(x) (31^__builtin_clz(unsigned(x)))
+</span><span class="k">using</span> <span class="n">uint</span> <span class="o">=</span> <span class="kt">unsigned</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">];</span>
+<span class="k">struct</span> <span class="nc">node</span><span class="p">{</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">p1</span><span class="p">,</span><span class="o">*</span><span class="n">p2</span><span class="p">;</span>
+<span class="p">}</span><span class="n">blk</span><span class="p">[</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">];</span>
+<span class="k">struct</span> <span class="nc">rang</span><span class="p">{</span>
+	<span class="n">node</span><span class="o">*</span><span class="n">p1</span><span class="p">,</span><span class="o">*</span><span class="n">p2</span><span class="p">;</span><span class="c1">//next: opt out this.</span>
+<span class="p">}</span><span class="n">mbr</span><span class="p">[</span><span class="n">G</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">uint</span> <span class="n">msk</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">init</span><span class="p">(){</span>
+	<span class="n">blk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">buf</span><span class="p">,</span><span class="n">end</span><span class="p">(</span><span class="n">buf</span><span class="p">)};</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">G</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+		<span class="n">mbr</span><span class="p">[</span><span class="n">G</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">blk</span><span class="o">+</span><span class="p">((</span><span class="n">i</span><span class="o">?</span><span class="mi">2</span><span class="o">:</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">blk</span><span class="o">+</span><span class="p">(</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+	<span class="p">}</span>
+	<span class="n">msk</span><span class="o">=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span> <span class="kt">int</span><span class="o">*</span> <span class="nf">fmalloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span><span class="k">noexcept</span><span class="p">{</span>
+	<span class="n">uint</span> <span class="n">let</span><span class="o">=</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">__lg32</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">msk</span><span class="o">&amp;~</span><span class="p">(</span><span class="n">let</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+	<span class="n">node</span><span class="o">*</span><span class="n">p</span><span class="o">=</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">res</span><span class="o">=</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="p">;</span>
+	<span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="o">+=</span><span class="n">n</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="o">&lt;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p2</span><span class="p">){</span>
+		<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p2</span><span class="o">-</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="p">);</span>
+		<span class="n">msk</span><span class="o">|=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+		<span class="k">auto</span> <span class="n">q</span><span class="o">=--</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">q</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span> <span class="o">=</span> <span class="n">uint</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="n">blk</span><span class="p">);</span>
+	<span class="p">}</span><span class="k">else</span><span class="o">*</span><span class="n">p</span><span class="o">=</span><span class="p">{};</span>
+	<span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">inblk</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span><span class="p">){</span><span class="k">return</span> <span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="k">sizeof</span> <span class="n">blk</span><span class="o">/</span><span class="k">sizeof</span> <span class="n">blk</span><span class="p">[</span><span class="mi">0</span><span class="p">]);}</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">ffree</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="n">p</span><span class="p">,</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span><span class="k">noexcept</span><span class="p">{</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">bg</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="o">*</span><span class="n">ed</span><span class="o">=</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">!=</span><span class="n">buf</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">inblk</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+			<span class="k">auto</span><span class="o">&amp;</span><span class="n">cur</span><span class="o">=</span><span class="n">blk</span><span class="p">[</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)];</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">p2</span><span class="o">==</span><span class="n">p</span><span class="p">){</span>
+				<span class="n">bg</span><span class="o">=</span><span class="n">cur</span><span class="p">.</span><span class="n">p1</span><span class="p">;</span>
+				<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="n">bg</span><span class="p">);</span>
+				<span class="n">cur</span><span class="o">=*</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">);</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">inblk</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">)))</span> <span class="p">{</span>
+			<span class="k">auto</span><span class="o">&amp;</span><span class="n">cur</span><span class="o">=</span><span class="n">blk</span><span class="p">[</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">)];</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">p1</span><span class="o">==</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">){</span>
+				<span class="n">ed</span><span class="o">=</span><span class="n">cur</span><span class="p">.</span><span class="n">p2</span><span class="p">;</span>
+				<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">));</span>
+				<span class="n">cur</span><span class="o">=*</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">);</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="n">bg</span><span class="p">);</span>
+	<span class="n">msk</span><span class="o">|=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+	<span class="o">*--</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">=</span><span class="p">{</span><span class="n">bg</span><span class="p">,</span><span class="n">ed</span><span class="p">};</span>
+	<span class="o">*</span><span class="n">bg</span><span class="o">=*</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">uint</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">-</span><span class="n">blk</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">fallocator</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="k">typedef</span> <span class="n">T</span>           <span class="n">value_type</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="n">T</span><span class="o">*</span>          <span class="n">pointer</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span>    <span class="n">const_pointer</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="n">T</span><span class="o">&amp;</span>          <span class="n">reference</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span>    <span class="n">const_reference</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="kt">size_t</span>      <span class="n">size_type</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="kt">ptrdiff_t</span>   <span class="n">difference_type</span><span class="p">;</span>
+	<span class="k">constexpr</span> <span class="k">static</span> <span class="n">size_type</span> <span class="n">rat</span><span class="o">=</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="o">+</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+	<span class="n">pointer</span> <span class="n">allocate</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="p">(</span><span class="n">pointer</span><span class="p">)</span><span class="n">fmalloc</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">rat</span><span class="p">);}</span>
+	<span class="kt">void</span> <span class="nf">deallocate</span><span class="p">(</span><span class="n">pointer</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">ffree</span><span class="p">((</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="o">*</span><span class="n">rat</span><span class="p">);</span> <span class="p">}</span> 
+<span class="p">};</span>
+
+<span class="k">namespace</span> <span class="n">test_zhihu</span><span class="p">{</span>
+<span class="k">struct</span> <span class="nc">E</span> <span class="p">{</span><span class="kt">int</span> <span class="n">a</span><span class="p">;</span><span class="n">E</span><span class="p">(</span><span class="kt">int</span> <span class="n">aa</span><span class="p">)</span><span class="o">:</span><span class="n">a</span><span class="p">(</span><span class="n">aa</span><span class="p">){}};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">alloc_t</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">alloc_t</span><span class="o">&amp;&amp;</span><span class="n">alloc</span><span class="o">=</span><span class="n">alloc_t</span><span class="p">())</span> <span class="p">{</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">__PRETTY_FUNCTION__</span><span class="o">&lt;&lt;</span><span class="s">": "</span><span class="p">;</span>
+	<span class="k">auto</span> <span class="n">cc</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ARRAY_COUNT</span> <span class="o">=</span> <span class="mi">1000L</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">TEST_COUNT</span> <span class="o">=</span> <span class="n">ARRAY_COUNT</span> <span class="o">*</span> <span class="mi">100000L</span><span class="p">;</span>
+	<span class="k">static</span> <span class="n">E</span><span class="o">*</span> <span class="n">es</span><span class="p">[</span><span class="n">ARRAY_COUNT</span><span class="p">];</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">es</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">E</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">ARRAY_COUNT</span><span class="p">);</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">TEST_COUNT</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">long</span> <span class="kt">long</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">123456789L</span><span class="o">%</span><span class="n">ARRAY_COUNT</span><span class="p">;</span>
+		<span class="n">E</span><span class="o">*</span> <span class="n">e</span> <span class="o">=</span> <span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">e</span><span class="o">-&gt;~</span><span class="n">E</span><span class="p">(),</span><span class="n">alloc</span><span class="p">.</span><span class="n">deallocate</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+		<span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">alloc</span><span class="p">.</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="k">new</span><span class="p">(</span><span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="n">E</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ARRAY_COUNT</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">E</span><span class="o">*</span><span class="n">e</span><span class="o">=</span><span class="n">es</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">n</span><span class="o">+=</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">cc</span><span class="o">&lt;&lt;</span><span class="sc">' '</span><span class="o">&lt;&lt;</span><span class="n">n</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span>
+<span class="k">namespace</span> <span class="n">test_stl_insertend</span> <span class="p">{</span>
+	<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="kt">int</span> <span class="n">per</span><span class="o">=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">18</span><span class="p">&gt;</span>
+	<span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span><span class="n">t</span><span class="p">,</span><span class="kt">unsigned</span> <span class="n">rnd</span><span class="p">){</span>
+		<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">__PRETTY_FUNCTION__</span><span class="o">&lt;&lt;</span><span class="s">": "</span><span class="p">;</span>
+		<span class="k">auto</span> <span class="n">cur</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">rnd</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">t</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+			<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">per</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+				<span class="n">t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">per</span><span class="o">-</span><span class="n">i</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">cur</span><span class="o">&lt;&lt;</span><span class="s">"clocks, "</span><span class="o">&lt;&lt;</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">signed</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">init</span><span class="p">();</span>
+
+	<span class="n">test_zhihu</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">test_zhihu</span><span class="o">::</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+	<span class="n">test_zhihu</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="n">test_zhihu</span><span class="o">::</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">10000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">10000</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">100</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">100</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">100000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">1000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">100000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">1000</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">10000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">10000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">10000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">10000</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最唐诗的是，linux的自动管理体系十分超前，以至于这个allocator没有任何意义。</p>
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgwMjQ1NjM1Niw0ODI4MTU1NTNdfQ==
+-->]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[浅谈一些科技]]></summary></entry><entry><title type="html">Daily</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/29/daily.html" rel="alternate" type="text/html" title="Daily" /><published>2024-11-29T00:00:00+00:00</published><updated>2024-11-29T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/11/29/daily</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/29/daily.html"><![CDATA[<p>明天就noip了！！！</p>
+
+<p>我介绍一些科技：</p>
+
+<ul>
+  <li>allocator。手写内存池。这个算法比较先进，O(1)分配删除 任意长度的空间。冗余大约3倍。github 上的 orlicz/advanced-allocator</li>
+  <li>spj。不用testlib的。只需要cerr«“ok “就可以hydrooj判定ok了</li>
+  <li>组合零点方法。</li>
+</ul>
+
+<p>$$
+\prod_{i&lt;j} (x_i-x_j)^2
+$$</p>
+
+<p>这个的最高次项，关于 $(x_1,….)^{k-1}$ 的，值是 $k!(-1)^{\binom k2}$。</p>
+
+<p>注意！这里，这个方法是说明，类似的多项式，不恒为0.（为什么?组合零点方法！）
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNTM4MTM3NzA3XX0=
+--></p>]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[明天就noip了！！！]]></summary></entry><entry><title type="html">Some Tech</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/28/some-tech.html" rel="alternate" type="text/html" title="Some Tech" /><published>2024-11-28T00:00:00+00:00</published><updated>2024-11-28T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/2024/11/28/some-tech</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/2024/11/28/some-tech.html"><![CDATA[<p>custom allocator</p>
+
+<p>zwsun</p>
+
+<p>vandermender</p>
+
+<p>spj
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTc4MTkyMDEyOV19
+--></p>]]></content><author><name>Orlicz</name></author><summary type="html"><![CDATA[custom allocator]]></summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/jekyll/2018/12/07/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2018-12-07T00:00:00+00:00</published><updated>2018-12-07T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/jekyll/2018/12/07/welcome-to-jekyll</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/jekyll/2018/12/07/welcome-to-jekyll.html"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+
+<p>To add new posts, simply add a file in the <code class="language-plaintext highlighter-rouge">_posts</code> directory that follows the convention <code class="language-plaintext highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+
+<h2 id="section-1">section 1</h2>
+
+<p>Jekyll also offers powerful support for code snippets:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
+<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+
+<h2 id="section-2">section 2</h2>
+
+<p>Check out the <a href="https://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>
+
+<p>$ a * b = c ^ b $</p>
+
+<p>$ 2^{\frac{n-1}{3}} $</p>
+
+<p>$ \int_a^b f(x)\,dx. $</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello World!"</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// prints 'Hi, Tom' to STDOUT.</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="nc">Person</span><span class="p">(</span><span class="sh">"</span><span class="s">John</span><span class="sh">"</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">age</span><span class="p">)</span>
+</code></pre></div></div>]]></content><author><name>Jeffrey</name></author><category term="jekyll" /><category term="jekyll" /><category term="theme" /><category term="yat" /><summary type="html"><![CDATA[You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.]]></summary></entry><entry><title type="html">An exhibit of Markdown</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/12/05/an-exhibit-of-markdown.html" rel="alternate" type="text/html" title="An exhibit of Markdown" /><published>2018-12-05T00:00:00+00:00</published><updated>2018-12-05T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/12/05/an-exhibit-of-markdown</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/12/05/an-exhibit-of-markdown.html"><![CDATA[<p>This note demonstrates some of what <a href="https://daringfireball.net/projects/markdown/">Markdown</a> is capable of doing.</p>
+
+<h2 id="an-exhibit-of-markdown">An exhibit of Markdown</h2>
+
+<p><em>Note: Feel free to play with this page. Unlike regular notes, this doesn’t automatically save itself.</em></p>
+
+<h2 id="basic-formatting">Basic formatting</h2>
+
+<p>Paragraphs can be written like so. A paragraph is the basic block of Markdown. A paragraph is what text will turn into when there is no reason it should become anything else.</p>
+
+<p>Paragraphs must be separated by a blank line. Basic formatting of <em>italics</em> and <strong>bold</strong> is supported. This <em>can be <strong>nested</strong> like</em> so.</p>
+
+<h2 id="lists">Lists</h2>
+
+<h3 id="ordered-list">Ordered list</h3>
+
+<ol>
+  <li>Item 1</li>
+  <li>A second item</li>
+  <li>Number 3</li>
+  <li>Ⅳ</li>
+</ol>
+
+<p><em>Note: the fourth item uses the Unicode character for <a href="https://www.fileformat.info/info/unicode/char/2163/index.htm">Roman numeral four</a>.</em></p>
+
+<h3 id="unordered-list">Unordered list</h3>
+
+<ul>
+  <li>An item</li>
+  <li>Another item</li>
+  <li>Yet another item</li>
+  <li>And there’s more…</li>
+</ul>
+
+<h2 id="paragraph-modifiers">Paragraph modifiers</h2>
+
+<h3 id="code-block">Code block</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Code blocks are very useful for developers and other people who look at code or other things that are written in plain text. As you can see, it uses a fixed-width font.
+</code></pre></div></div>
+
+<p>You can also make <code class="language-plaintext highlighter-rouge">inline code</code> to add code into other things.</p>
+
+<h3 id="quote">Quote</h3>
+
+<blockquote>
+  <p>Here is a quote. What this is should be self explanatory. Quotes are automatically indented when they are used.</p>
+</blockquote>
+
+<h2 id="headings">Headings</h2>
+
+<p>There are six levels of headings. They correspond with the six levels of HTML headings. You’ve probably noticed them already in the page. Each level down uses one more hash character.</p>
+
+<h3 id="headings-can-also-contain-formatting">Headings <em>can</em> also contain <strong>formatting</strong></h3>
+
+<h3 id="they-can-even-contain-inline-code">They can even contain <code class="language-plaintext highlighter-rouge">inline code</code></h3>
+
+<p>Of course, demonstrating what headings look like messes up the structure of the page.</p>
+
+<p>I don’t recommend using more than three or four levels of headings here, because, when you’re smallest heading isn’t too small, and you’re largest heading isn’t too big, and you want each size up to look noticeably larger and more important, there there are only so many sizes that you can use.</p>
+
+<h2 id="urls">URLs</h2>
+
+<p>URLs can be made in a handful of ways:</p>
+
+<ul>
+  <li>A named link to <a href="https://www.markitdown.net/">MarkItDown</a>. The easiest way to do these is to select what you want to make a link and hit <code class="language-plaintext highlighter-rouge">Ctrl+L</code>.</li>
+  <li>Another named link to <a href="https://www.markitdown.net/">MarkItDown</a></li>
+  <li>Sometimes you just want a URL like <a href="https://www.markitdown.net/">https://www.markitdown.net/</a>.</li>
+</ul>
+
+<h2 id="horizontal-rule">Horizontal rule</h2>
+
+<p>A horizontal rule is a line that goes across the middle of the page.</p>
+
+<hr />
+
+<p>It’s sometimes handy for breaking things up.</p>
+
+<h2 id="images">Images</h2>
+
+<p>Markdown can also contain images. I’ll need to add something here sometime.</p>
+
+<h2 id="finally">Finally</h2>
+
+<p>There’s actually a lot more to Markdown than this. See the official <a href="https://daringfireball.net/projects/markdown/basics">introduction</a> and <a href="https://daringfireball.net/projects/markdown/syntax">syntax</a> for more information. However, be aware that this is not using the official implementation, and this might work subtly differently in some of the little things.</p>]]></content><author><name>Orlicz</name></author><category term="markdown" /><category term="example" /><category term="markdown" /><summary type="html"><![CDATA[This note demonstrates some of what Markdown is capable of doing.]]></summary></entry><entry><title type="html">Mathjax Test</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/05/26/mathjax-test.html" rel="alternate" type="text/html" title="Mathjax Test" /><published>2018-05-26T00:00:00+00:00</published><updated>2018-05-26T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/05/26/mathjax-test</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/markdown/2018/05/26/mathjax-test.html"><![CDATA[<ul>
+  <li>A safe integer is an integer that
+    <ul>
+      <li>can be exactly represented as an IEEE-754 double precision number, and</li>
+      <li>whose IEEE-75 representation cannot be the result of rounding any other integer to fit the IEEE-754 representation</li>
+    </ul>
+  </li>
+  <li>For example, $ 2 ^ {53} - 1 $ is a safe integer,
+    <ul>
+      <li>it can be exactly represented</li>
+    </ul>
+  </li>
+</ul>]]></content><author><name>Orlicz</name></author><category term="markdown" /><category term="test" /><summary type="html"><![CDATA[A safe integer is an integer that can be exactly represented as an IEEE-754 double precision number, and whose IEEE-75 representation cannot be the result of rounding any other integer to fit the IEEE-754 representation For example, $ 2 ^ {53} - 1 $ is a safe integer, it can be exactly represented]]></summary></entry><entry><title type="html">Video example</title><link href="//github-yet.orlicz.top/jekyll-theme-yat/example/2017/12/18/video-example.html" rel="alternate" type="text/html" title="Video example" /><published>2017-12-18T00:00:00+00:00</published><updated>2017-12-18T00:00:00+00:00</updated><id>//github-yet.orlicz.top/jekyll-theme-yat/example/2017/12/18/video-example</id><content type="html" xml:base="//github-yet.orlicz.top/jekyll-theme-yat/example/2017/12/18/video-example.html"><![CDATA[<h2 id="canon-in-d-pachelbels-canon---cello--piano-best-wedding-version">Canon in D (Pachelbel’s Canon) - Cello &amp; Piano [BEST WEDDING VERSION]</h2>
+<p>Some of you know that we occasionally play for weddings. As you can imagine, we get a LOT of requests for Canon in D, and we discovered that there were no good arrangements available anywhere for piano and cello! Hard to believe given its popularity. So we decided to make our own! We tried to stick as closely to the original as possible (which was written for three violins and basso continuo), and we performed it <em>not</em> at a snail’s pace so the bride can actually make it down the aisle without putting everyone to sleep. 🙊(Yeah, we said it! Nobody likes a slow processional!) Also, the number one complaint about this piece from cellists is always how booooring it is to play because they literally have to play the same 8 bass notes over and over for the entire piece. Problem solved with this arrangement because the cello never has to play the bass! 🙌(The piano does, but we get lots of other fun stuff too so it’s ok!) So for all you musicians out there playing weddings, we hope you enjoy playing this arrangement a little more than the ones you were used to…You can get it from www.musicnotes.com. 😊Be sure to let us know in the comments if you do!</p>
+
+<p><img src="//www.youtube.com/watch?v=Ptk_1Dc2iPY" alt="" /></p>
+
+<h2 id="gucci-hallucination--the-line-animation--gucci">GUCCI HALLUCINATION / THE LINE ANIMATION / GUCCI</h2>
+<p>BACKGROUND /</p>
+
+<p>Gucci share their creative vision through a series of surreal animated paintings by acclaimed artist Ignasi Monreal and The Line Animation studio. The animations make up part of a larger campaign shared via social media, above the line and print.</p>
+
+<p>APPROACH /</p>
+
+<p>Our aim was to ground and accentuate the outlandish scenarios with ambient sound design. Neither proclaiming to be positive or negative, the sound conveys a sense of the uncanny and leaves the audience with nothing but their own interpretations. their creative vision through a series of surreal animated paintings by acclaimed artist Ignasi Monreal and The Line Animation studio. The animations make up part of a larger campaign shared via social media, above the line and print.</p>
+
+<p><img src="https://vimeo.com/263856289" alt="" /></p>
+
+<h2 id="finneas-demos-how-he-builds-songs-for-billie-eilish">FINNEAS Demos How He Builds Songs For Billie Eilish</h2>
+<p>Grammy Award-winning musician and producer FINNEAS sits down with Pitchfork and closely examines his creative process while working on some of the biggest hit songs of the past couple years. FINNEAS explores the sounds that brought upon 
+some of his greatest musical breakthroughs in songs such as bad guy, bury a friend, ocean eyes, when the party’s over, I Lost a Friend, Used to This and much more.</p>
+
+<p><img src="https://dai.ly/x7tgcev" alt="" /></p>
+
+<h2 id="2019-bmw-vision-m-next-concept-hd">2019 BMW Vision M NEXT Concept (HD)</h2>
+
+<p>In future, drivers will be able to choose whether they wish to be driven or do the driving themselves. With the BMW Vision M NEXT, the BMW Group is revealing its take on how driving pleasure might look in future. It offers a foretaste of the BMW M brand’s electrified future by placing the focus squarely on the actively engaged driver. Intelligent technologies provide comprehensive yet carefully targeted assistance to turn them into the ultimate driver.</p>
+
+<p><img src="https://www.dailymotion.com/video/x7bur2y" alt="" /></p>
+
+<h2 id="this-is-the-poster-image">This is the poster image</h2>
+<p>In modern browsers, adding a video to your page is as easy as adding an image. No longer do you need to deal with special plug-ins or require crazy markup, you can do it with a single element.
+<img src="//www.html5rocks.com/en/tutorials/video/basics/devstories.webm" alt="video" /></p>]]></content><author><name>Orlicz</name></author><category term="example" /><category term="video" /><summary type="html"><![CDATA[Canon in D (Pachelbel’s Canon) - Cello &amp; Piano [BEST WEDDING VERSION] Some of you know that we occasionally play for weddings. As you can imagine, we get a LOT of requests for Canon in D, and we discovered that there were no good arrangements available anywhere for piano and cello! Hard to believe given its popularity. So we decided to make our own! We tried to stick as closely to the original as possible (which was written for three violins and basso continuo), and we performed it not at a snail’s pace so the bride can actually make it down the aisle without putting everyone to sleep. 🙊(Yeah, we said it! Nobody likes a slow processional!) Also, the number one complaint about this piece from cellists is always how booooring it is to play because they literally have to play the same 8 bass notes over and over for the entire piece. Problem solved with this arrangement because the cello never has to play the bass! 🙌(The piano does, but we get lots of other fun stuff too so it’s ok!) So for all you musicians out there playing weddings, we hope you enjoy playing this arrangement a little more than the ones you were used to…You can get it from www.musicnotes.com. 😊Be sure to let us know in the comments if you do!]]></summary></entry></feed>
