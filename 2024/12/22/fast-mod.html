@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+<h3 id="快速取模数">快速取模数</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="n">u32</span><span class="o">=</span><span class="kt">uint32_t</span><span class="p">;</span><span class="k">using</span> <span class="n">u64</span><span class="o">=</span><span class="kt">uint64_t</span><span class="p">;</span>
+<span class="k">struct</span> <span class="nc">Barrett</span><span class="p">{</span>
+	<span class="n">u64</span> <span class="n">ir</span><span class="p">,</span><span class="n">m</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="n">init</span><span class="p">(</span><span class="n">u32</span> <span class="n">m_</span><span class="p">){</span><span class="n">ir</span><span class="o">=</span><span class="p">((</span><span class="n">__int128</span><span class="p">)</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">64</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m_</span><span class="p">);}</span>
+	<span class="kr">inline</span> <span class="n">u64</span> <span class="k">operator</span><span class="p">()(</span><span class="n">u64</span> <span class="n">x</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">x</span><span class="o">-</span><span class="p">((</span><span class="n">__int128</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">ir</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">64</span><span class="p">)</span><span class="o">*</span><span class="n">m</span><span class="p">;}</span>
+	<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span><span class="kr">inline</span> <span class="k">operator</span> <span class="n">T</span><span class="p">()</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">m</span><span class="p">;}</span>
+<span class="p">}</span><span class="n">mod</span><span class="p">;</span>
+<span class="kr">inline</span> <span class="n">u64</span> <span class="k">operator</span><span class="o">%</span><span class="p">(</span><span class="n">u64</span> <span class="n">x</span><span class="p">,</span><span class="n">Barrett</span> <span class="n">mod</span><span class="p">){</span><span class="k">return</span> <span class="n">mod</span><span class="p">(</span><span class="n">x</span><span class="p">);}</span>
+<span class="kr">inline</span> <span class="n">u64</span><span class="o">&amp;</span><span class="k">operator</span><span class="o">%=</span><span class="p">(</span><span class="n">u64</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span><span class="n">Barrett</span> <span class="n">mod</span><span class="p">){</span><span class="k">return</span> <span class="n">x</span><span class="o">=</span><span class="n">mod</span><span class="p">(</span><span class="n">x</span><span class="p">);}</span>
+<span class="k">struct</span> <span class="nc">Montgomery</span><span class="p">{</span>
+	<span class="n">u32</span> <span class="n">m</span><span class="p">,</span><span class="n">ir</span><span class="p">;</span>
+	<span class="k">static</span> <span class="n">u32</span> <span class="n">inv_m</span><span class="p">(</span><span class="n">u32</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">u32</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">;)</span><span class="n">x</span><span class="o">*=</span><span class="mi">2</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">m</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="n">u32</span> <span class="n">m_</span><span class="p">){</span><span class="n">m</span><span class="o">=</span><span class="n">m_</span><span class="p">,</span><span class="n">ir</span><span class="o">=-</span><span class="n">inv_m</span><span class="p">(</span><span class="n">m</span><span class="p">),</span><span class="n">mod</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">m_</span><span class="p">);}</span>
+	<span class="n">u32</span> <span class="nf">tran</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">mod</span><span class="p">(</span><span class="n">u64</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="mi">32</span><span class="p">);}</span>
+	<span class="n">u32</span> <span class="nf">val</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">redc_m</span><span class="p">(</span><span class="n">redc</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="n">m</span><span class="p">);}</span>
+	<span class="n">u32</span> <span class="nf">add</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">,</span> <span class="n">u32</span> <span class="n">b</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">redc_m2</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">-</span><span class="n">m</span><span class="o">*</span><span class="mi">2</span><span class="p">);}</span>
+	<span class="n">u32</span> <span class="nf">sub</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">,</span> <span class="n">u32</span> <span class="n">b</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">redc_m2</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">);}</span>
+	<span class="n">u32</span> <span class="n">redc_m</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">a</span><span class="o">&gt;&gt;</span><span class="mi">31</span><span class="o">?</span><span class="n">a</span><span class="o">+</span><span class="n">m</span><span class="o">:</span><span class="n">a</span><span class="p">;}</span>
+	<span class="n">u32</span> <span class="n">redc_m2</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">a</span><span class="o">&gt;&gt;</span><span class="mi">31</span><span class="o">?</span><span class="n">a</span><span class="o">+</span><span class="n">m</span><span class="o">*</span><span class="mi">2</span><span class="o">:</span><span class="n">a</span><span class="p">;}</span>
+	<span class="n">u32</span> <span class="n">redc</span><span class="p">(</span><span class="n">u64</span> <span class="n">a</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">u64</span><span class="p">(</span><span class="n">u32</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">ir</span><span class="p">)</span><span class="o">*</span><span class="n">m</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">;}</span>
+	<span class="n">u32</span> <span class="nf">mul</span><span class="p">(</span><span class="n">u32</span> <span class="n">a</span><span class="p">,</span><span class="n">u32</span> <span class="n">b</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">redc</span><span class="p">(</span><span class="n">u64</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">b</span><span class="p">);}</span>
+<span class="p">}</span><span class="n">mtg</span><span class="p">;</span>
+<span class="k">struct</span> <span class="nc">mint</span><span class="p">{</span>
+	<span class="n">u32</span> <span class="n">z</span><span class="p">;</span>
+	<span class="n">mint</span><span class="p">()</span><span class="o">=</span><span class="k">default</span><span class="p">;</span>
+	<span class="n">mint</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span><span class="o">:</span><span class="n">z</span><span class="p">(</span><span class="n">mtg</span><span class="p">.</span><span class="n">tran</span><span class="p">(</span><span class="n">x</span><span class="p">)){}</span>
+	<span class="n">mint</span><span class="p">(</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="n">z</span><span class="p">)</span><span class="o">:</span><span class="n">z</span><span class="p">(</span><span class="o">*</span><span class="n">z</span><span class="p">.</span><span class="n">begin</span><span class="p">()){}</span>
+	<span class="n">u32</span> <span class="nf">val</span><span class="p">()</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">mtg</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">z</span><span class="p">);}</span>
+	<span class="cp">#define mkopt_mint(star,mul)\
+	mint operator star(mint const rhs)const{return{mtg.mul(z,rhs.z)};}\
+	mint&amp;operator star##=(mint const rhs){z=mtg.mul(z,rhs.z);return*this;}
+</span>	<span class="n">mkopt_mint</span><span class="p">(</span><span class="o">+</span><span class="p">,</span><span class="n">add</span><span class="p">)</span><span class="n">mkopt_mint</span><span class="p">(</span><span class="o">-</span><span class="p">,</span><span class="n">sub</span><span class="p">)</span><span class="n">mkopt_mint</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="n">mul</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="kr">inline</span> <span class="n">mint</span><span class="o">&amp;</span><span class="k">operator</span><span class="o">%=</span><span class="p">(</span><span class="n">mint</span><span class="o">&amp;</span><span class="n">_</span><span class="p">,</span><span class="n">Barrett</span><span class="p">){</span><span class="k">return</span> <span class="n">_</span><span class="p">;}</span>
+<span class="kr">inline</span> <span class="n">mint</span> <span class="k">operator</span><span class="o">%</span><span class="p">(</span><span class="n">mint</span> <span class="n">_</span><span class="p">,</span><span class="n">Barrett</span><span class="p">){</span><span class="k">return</span> <span class="n">_</span><span class="p">;}</span>
+
+
+
+<span class="kt">signed</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">u32</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">q</span><span class="p">;</span><span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="o">&gt;&gt;</span><span class="n">q</span><span class="p">;</span>
+	<span class="n">assert</span><span class="p">(</span><span class="n">q</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">mtg</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">mint</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">mint</span><span class="p">(</span><span class="n">b</span><span class="p">)).</span><span class="n">val</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">%</span><span class="n">mod</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+
+	<span class="n">mt19937</span> <span class="n">rng</span><span class="p">;</span>
+	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">a</span><span class="o">=</span><span class="n">rng</span><span class="p">()</span><span class="o">%</span><span class="n">mod</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">rng</span><span class="p">()</span><span class="o">%</span><span class="n">mod</span><span class="p">;</span>
+		<span class="n">assert</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">%</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">mod</span> <span class="o">==</span> <span class="p">(</span><span class="n">mint</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">mint</span><span class="p">(</span><span class="n">b</span><span class="p">)).</span><span class="n">val</span><span class="p">());</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>mtg要求mod&amp;1，然后bar约减没有这个要求。</p>
+
+<p>https://blog.rogery.dev/post/learn-fastmod/</p>
+
+<h2 id="优化取模的几种方法">优化取模的几种方法</h2>
+
+<p>2023 年 2 月 7 日</p>
+
+<p>取模是很慢的，尤其是当模数是动态的数时。</p>
+
+<p>我没学过误差分析，大概讲法很民科（</p>
+
+<h2 id="浮点实现">浮点实现</h2>
+
+<p>显然有等式</p>
+
+<p>a mod m=a−⌊am⌋ma \bmod m = a - \left\lfloor \frac{a}{m} \right\rfloor mamodm=a−⌊ma​⌋m</p>
+
+<p>一般情况下是 mmm 是 <code class="language-plaintext highlighter-rouge">i32</code> 范围，且 a∈[0,m2)a \in [0, m^2)a∈[0,m2)，最简单的实现方式就是浮点除法。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct ModF {
+  u32 m;
+  f64 ivm;
+  ModF(i32 m_) : m(m_), ivm(1.0 / m) {}
+  u32 calc(u64 a) const {
+    u32 r = a - i64(a * ivm) * m;
+    if (r &gt;= m)
+      r -= m;
+    if (r &lt; 0)
+      r += m;
+    return r;
+  }
+};
+
+</code></pre></div></div>
+
+<h2 id="barrett-reduction">Barrett Reduction</h2>
+
+<p>考虑除法的一个替代，选取 q,sq, sq,s 使得等式</p>
+
+<p>⌊a/m⌋=⌊aq2s⌋,q≈2sm\lfloor a/m \rfloor = \left\lfloor \frac{aq}{2^s} \right\rfloor, \quad q \approx \frac{2^s}{m}⌊a/m⌋=⌊2saq​⌋,q≈m2s​</p>
+
+<p>对尽可能多的 aaa 成立。由于 aaa 是整数，设误差是</p>
+
+<p>q2s=1m+ε\frac{q}{2^s} = \frac{1}{m} + \varepsilon 2sq​=m1​+ε</p>
+
+<p>当满足 0⩽aε&lt;1m0 \leqslant a\varepsilon &lt; \frac{1}{m}0⩽aε&lt;m1​ 则除法是精确的，因此选择</p>
+
+<p>q=⌈2sm⌉=⌊2s+m−1m⌋q = \left\lceil \frac{2^s}{m} \right\rceil = \left\lfloor \frac{2^s + m - 1}{m} \right\rfloorq=⌈m2s​⌉=⌊m2s+m−1​⌋</p>
+
+<p>是比较方便的。可以推得</p>
+
+<p>ε=q2s−1m&lt;2s+m−12sm−1m=m−1m2s&lt;ε‾\varepsilon = \frac{q}{2^s} - \frac{1}{m} &lt; \frac{2^s + m - 1}{2^sm} -\frac{1}{m} = \frac{m-1}{m 2^s} &lt; \overline{\varepsilon}ε=2sq​−m1​&lt;2sm2s+m−1​−m1​=m2sm−1​&lt;ε</p>
+
+<p>化简得到 2s&gt;m−1mε‾2^s &gt; \frac{m - 1}{m \overline{\varepsilon}}2s&gt;mεm−1​。假如 a∈[0,m2)a \in [0, m^2)a∈[0,m2)，大概需要 s≈3log⁡2ms \approx 3\log_2 ms≈3log2​m。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Barrett {
+  enum { s = 96 };
+  static constexpr u128 s2 = u128(1) &lt;&lt; s;
+  u32 m;
+  u128 ivm;
+  Barrett(u32 m_) : m(m_), ivm((s2 - 1) / m + 1) {}
+  u32 div(u64 a) const {
+    return a * ivm &gt;&gt; s;
+  }
+  u32 calc(u64 a) const {
+    return a - u64(div(a)) * m;
+  }
+};
+
+</code></pre></div></div>
+
+<h3 id="乘定值">乘定值</h3>
+
+<p>倘若我们要计算 a×b mod ma \times b \bmod ma×bmodm，其中 bbb 是定值，可以把上式的一部分合并。</p>
+
+<p>推导过程没什么区别，重新考虑带入式，仍选择</p>
+
+<p>q=⌈2sbm⌉=⌊2sb+m−1m⌋q = \left\lceil \frac{2^sb}{m} \right\rceil = \left\lfloor \frac{2^sb + m - 1}{m} \right\rfloorq=⌈m2sb​⌉=⌊m2sb+m−1​⌋</p>
+
+<p>由于 aaa 是整数，设误差是</p>
+
+<p>q2s=bm+ε\frac{q}{2^s} = \frac{b}{m} + \varepsilon 2sq​=mb​+ε</p>
+
+<p>当满足 0⩽aε&lt;1m0 \leqslant a\varepsilon &lt; \frac{1}{m}0⩽aε&lt;m1​ 则除法是精确的。推得</p>
+
+<p>ε=q2s−bm&lt;2sb+m−12sm−bm=m−1m2s&lt;ε‾\varepsilon = \frac{q }{2^s} - \frac{b}{m} &lt; \frac{2^sb + m - 1}{2^s m} -\frac{b}{m} = \frac{m-1}{m 2^s} &lt; \overline{\varepsilon}ε=2sq​−mb​&lt;2sm2sb+m−1​−mb​=m2sm−1​&lt;ε</p>
+
+<p>化简得到 2s&gt;m−1mε‾2^s &gt; \frac{m - 1}{m \overline{\varepsilon}}2s&gt;mεm−1​。假如 a∈[0,m)a \in [0, m)a∈[0,m)，大概需要 s≈2log⁡2ms \approx 2\log_2 ms≈2log2​m。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct MulBarrett {
+  enum { s = 64 };
+  static constexpr u128 s2 = u128(1) &lt;&lt; s;
+  u32 b, m;
+  u64 ivm;
+  MulBarrett(u32 b_, u32 m_) : b(b_), m(m_), ivm((s2 * b - 1) / m + 1) {}
+  u64 div(u64 a) const {
+    return u128(a) * ivm &gt;&gt; s;
+  }
+  u32 calc(u32 a) const {
+    return a * b - u64(div(a)) * m;
+  }
+};
+
+</code></pre></div></div>
+
+<h3 id="调整">调整</h3>
+
+<p>取模可以没必要一次到位。</p>
+
+<p>考虑一次调整（是调整取模结果，除法无法调整），即令 0⩽ε&lt;1m0 \leqslant \varepsilon &lt; \frac{1}{m}0⩽ε&lt;m1​，可以得到 2s&gt;a−a/m2^s &gt; a - a / m2s&gt;a−a/m，例如当 a∈[0,m)a \in [0, m)a∈[0,m) 时有 s≈log⁡2ms \approx \log_2 ms≈log2​m。</p>
+
+<p>因此，定值乘法可以仅在 <code class="language-plaintext highlighter-rouge">u64</code> 下进行；若通过特殊的手段得到进位标志，<code class="language-plaintext highlighter-rouge">u64</code> 取模也是能仅在 <code class="language-plaintext highlighter-rouge">u64</code> 下完成的。</p>
+
+<p>因为允许调整，也就不必拘泥于向上取整，向下取整也是可以实现的。</p>
+
+<h2 id="lemire-reduction">Lemire Reduction</h2>
+
+<p>取模结果可以更直接的获得</p>
+
+<p>r=⌊(am−⌊am⌋)m⌋=⌊(aq2s−aε−⌊aqm−aε⌋)m⌋=⌊(aq−⌊aq2s−aε⌋2s−2saε)m2s⌋\begin{aligned} r &amp;= \left\lfloor \left(\frac{a}{m} - \left\lfloor \frac{a}{m} \right\rfloor \right) m \right\rfloor \\ &amp;= \left\lfloor \left(\frac{aq}{2^s} - a \varepsilon - \left\lfloor \frac{aq}{m} - a \varepsilon \right\rfloor \right) m \right\rfloor \\ &amp;= \left\lfloor \left(aq - \left\lfloor \frac{aq}{2^s} - a \varepsilon \right\rfloor 2^s - 2^s a \varepsilon \right) \frac{m}{2^s} \right\rfloor \end{aligned}r​=⌊(ma​−⌊ma​⌋)m⌋=⌊(2saq​−aε−⌊maq​−aε⌋)m⌋=⌊(aq−⌊2saq​−aε⌋2s−2saε)2sm​⌋​</p>
+
+<p>假定除法精确，即 0⩽aε&lt;1m0 \leqslant a \varepsilon &lt; \frac{1}{m}0⩽aε&lt;m1​，注意到这里可以化成取模</p>
+
+<p>r=⌊(aq mod 2s)⋅m2s+aεm⌋=⌊(aq mod 2s)⋅m2s⌋\begin{aligned} r &amp;= \left\lfloor \frac{(aq \bmod 2^s) \cdot m}{2^s} + a\varepsilon m \right\rfloor \\ &amp;= \left\lfloor \frac{(aq \bmod 2^s) \cdot m }{2^s} \right\rfloor \end{aligned}r​=⌊2s(aqmod2s)⋅m​+aεm⌋=⌊2s(aqmod2s)⋅m​⌋​</p>
+
+<p>精度还是 s≈3log⁡2ms \approx 3\log_2 ms≈3log2​m。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Lemire {
+  enum { s = 96 };
+  static constexpr u128 s2 = u128(1) &lt;&lt; s;
+  u32 m;
+  u128 q;
+  Lemire(u32 m_) : m(m_), q((s2 - 1) / m + 1) {}
+  u32 calc(u64 a) const {
+    return a * q % s2 * u128(m) &gt;&gt; s;
+  }
+};
+
+</code></pre></div></div>
+
+<h3 id="乘定值-1">乘定值</h3>
+
+<p>同样推导</p>
+
+<p>r=⌊(aq−⌊aq2s−aε⌋2s−2saε)m2s⌋=⌊(aq mod 2s)⋅m2s⌋\begin{aligned} r &amp;= \left\lfloor \left(aq - \left\lfloor \frac{aq}{2^s} - a \varepsilon \right\rfloor 2^s - 2^s a \varepsilon \right) \frac{m}{2^s} \right\rfloor \\ &amp;= \left\lfloor \frac{(aq \bmod 2^s) \cdot m }{2^s} \right\rfloor \end{aligned}r​=⌊(aq−⌊2saq​−aε⌋2s−2saε)2sm​⌋=⌊2s(aqmod2s)⋅m​⌋​</p>
+
+<p>精度仍是除法精确的 s≈2log⁡2ms \approx 2\log_2 ms≈2log2​m。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct MulLemire {
+  enum { s = 64 };
+  static constexpr u128 s2 = u128(1) &lt;&lt; s;
+  u32 b, m;
+  u64 q;
+  MulLemire(u32 b_, u32 m_) : b(b_), m(m_), q((s2 * b - 1) / m + 1) {}
+  u32 calc(u32 a) const {
+    return a * q * u128(m) &gt;&gt; s;
+  }
+};
+
+</code></pre></div></div>
+
+<h3 id="调整-1">调整</h3>
+
+<p>Lemire Reduction 无法调整。</p>
+
+<p>前面能调整是因为除法误差为 1，所以取模后只会差 mmm 的倍数；这里直接算出了取模，差了 1 差了 2 你也没办法校正，所以无法调整。</p>
+
+<h2 id="montgomery-multiplication">Montgomery multiplication</h2>
+
+<p>Montgomery multiplication 能够更好的利用 SIMD 加速，编译器也能够自动向量化。</p>
+
+<p>带调整的 Barrett 乘定值优化由于不涉及 <code class="language-plaintext highlighter-rouge">u128</code>，编译器也能够向量化，但除法的代价较高，总之还是不太行。</p>
+
+<h3 id="montgomery-空间">Montgomery 空间</h3>
+
+<p>设常数 rrr 满足 gcd⁡(r,m)=1 \gcd(r, m) = 1gcd(r,m)=1 且 r⩾mr \geqslant mr⩾m，一般选择 2642^{64}264 或 2322^{32}232。</p>
+
+<p>定义 xxx 在 Montgomery 空间中的值为</p>
+
+<p>x‾=xr mod m\overline{x} = xr \bmod mx=xrmodm</p>
+
+<p>加减是平凡的</p>
+
+<p>x‾±y‾=(x±y)r mod m\overline{x} \pm \overline{y} = (x \pm y) r \bmod mx±y​=(x±y)rmodm</p>
+
+<p>乘法有些特殊</p>
+
+<p>x‾∗y‾=xyr=x‾⋅y‾⋅r−1 mod m\overline{x} \ast \overline{y} = xy r = \overline{x} \cdot \overline{y} \cdot r^{-1} \bmod mx∗y​=xyr=x⋅y​⋅r−1modm</p>
+
+<p>因此关键在于两个函数：</p>
+
+<ul>
+  <li>
+<code class="language-plaintext highlighter-rouge">transform</code>：计算 x⋅r mod mx \cdot r \bmod mx⋅rmodm；</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">reduce</code>：计算 x⋅r−1 mod mx \cdot r^{-1} \bmod mx⋅r−1modm。</li>
+</ul>
+
+<h3 id="reduce">Reduce</h3>
+
+<p>Montgomery 指出了除 2 不需要除法：</p>
+
+<p>a2 mod m={a2,a 是偶数a+m2,a 是奇数\frac{a}{2} \bmod m = \begin{cases} \frac{a}{2} &amp;, a \text{ 是偶数} \\ \frac{a + m}{2} &amp;, a\text{ 是奇数} \\ \end{cases}2a​modm={2a​2a+m​​,a 是偶数,a 是奇数​</p>
+
+<p>且例如 r=232r = 2^{32}r=232 时</p>
+
+<p>a−a≡a−m(am−1)≡0(modr)a - a \equiv a - m (a m^{-1}) \equiv 0 \pmod ra−a≡a−m(am−1)≡0(modr)</p>
+
+<p>因此设置 μ=−m−1 mod r\mu = -m^{-1} \bmod rμ=−m−1modr，有</p>
+
+<p>xr−1≡x+m(xμ mod r)r(modm)x r^{-1} \equiv \frac{x + m(x\mu \bmod r)}{r} \pmod m xr−1≡rx+m(xμmodr)​(modm)</p>
+
+<p>再考虑值域，发现上式小于 2m2m2m。但是中间运算的没必要求值，可以惰性一点，最后映出时再规整。</p>
+
+<h3 id="transform">Transform</h3>
+
+<p>一般输入都是 [0,m)[0, m)[0,m)，直接乘就行；也可以利用 reduction，但是不会更优。</p>
+
+<p>或许可以尝试用 Barrett 优化一下？我没测试过，猜想带调整的更快一点。</p>
+
+<h3 id="更快的-2k2k2k-逆元">更快的 2k2^k2k 逆元</h3>
+
+<p>在 rrr 是 222 的幂次时，逆元可以用牛顿迭代。假设 xxx 是 aaa 在 2k2^k2k 下的逆元</p>
+
+<p>ax≡2kq+1(mod22k)ax \equiv 2^k q + 1 \pmod {2^{2k}}ax≡2kq+1(mod22k)</p>
+
+<p>那么</p>
+
+<p>ax(2−ax)≡1−22kq2≡1(mod22k)ax(2-ax) \equiv 1 - 2^{2k}q^2 \equiv 1 \pmod {2^{2k}}ax(2−ax)≡1−22kq2≡1(mod22k)</p>
+
+<h2 id="实现">实现</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Montgomery {
+  u32 m, ir;
+  static u32 inv_m(u32 m) {
+    u32 x = 1;
+    for (i32 i = 0; i &lt; 5; ++i)
+      x *= 2 - x * m;
+    return x;
+  }
+  Montgomery(u32 m_) : m(m_), ir(-inv_m(m)) {}
+  u32 tran(u32 a) const {
+    return (u64(a) &lt;&lt; 32) % m;
+  }
+  u32 val(u32 a) const { // itrans
+    return redc_m(redc(a) - m);
+  }
+  u32 add(u32 a, u32 b) const {
+    return redc_m2(a + b - m * 2);
+  }
+  u32 sub(u32 a, u32 b) const {
+    return redc_m2(a - b);
+  }
+  u32 redc_m(u32 a) const {
+    return a &gt;&gt; 31 ? a + m : a;
+  }
+  u32 redc_m2(u32 a) const {
+    return a &gt;&gt; 31 ? a + m * 2 : a;
+  }
+  u32 redc(u64 a) const {
+    return (a + u64(u32(a) * ir) * m) &gt;&gt; 32;
+  }
+  u32 mul(u32 a, u32 b) const {
+    return redc(u64(a) * b);
+  }
+};
+
+</code></pre></div></div>
+
+<h2 id="其他">其他</h2>
+
+<p><a href="https://www.luogu.com.cn/blog/plateIet/modulo-proof">@platelet</a> 在他的博客 <a href="https://www.luogu.com.cn/blog/plateIet/modulo">速度是编译器实现两倍的取模算法</a> 中提到了 Lemire Reduction 的乘定值优化。但是除法的代价太高，在长 nnn 的 NTT 中有 O(n)O(n)O(n) 个单位根需要处理，并不能表现出优势。反到是 Barrett 更优一点。</p>
+
+<p>除法代价高，初始化或许可以再套一次 Barrett？下次有空了试试。</p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Barrett_reduction">https://en.wikipedia.org/wiki/Barrett_reduction</a></li>
+  <li><a href="https://en.algorithmica.org/hpc/arithmetic/division/">https://en.algorithmica.org/hpc/arithmetic/division/</a></li>
+  <li><a href="https://arxiv.org/pdf/1407.3383.pdf">https://arxiv.org/pdf/1407.3383.pdf</a></li>
+</ul>
+
+<p>本文转自 <a href="https://blog.rogery.dev/post/learn-fastmod/">https://blog.rogery.dev/post/learn-fastmod/</a>，如有侵权，请联系删除。
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbOTg5ODcxNjcwLDc2NzY0MTk2MV19
+--></p>
+</body></html>
