@@ -10,7 +10,7 @@
 
 直觉固然重要，但是也要多尝试。把问题想得广泛，转化得弱一些也是可以的。比如，想到将一个序列问题转化成平面的矩形问题。这固然可能会导致一些hard，比如 increasing mex
 
-就是说，
+就是说，给定一个序列，每次你可以做的是，将相邻两数
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDg4ODMxOTI2XX0=
+eyJoaXN0b3J5IjpbMTcwOTIwOTAxOV19
 -->
