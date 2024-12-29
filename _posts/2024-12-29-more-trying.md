@@ -4,7 +4,7 @@
 
 古代有一本书，叫做 《The Change》 ，翻译成现代汉语就是《易经》，意思就是要多尝试，多变化。
 
-有一个古人说过“”
+有一个古人说过“多言数穷，不如守中。”这个称之为老子的古人说的并非全对，意思说，
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTYyMDg0NTE0OF19
+eyJoaXN0b3J5IjpbMTYzNjk3MzM3OV19
 -->
