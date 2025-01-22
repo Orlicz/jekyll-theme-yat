@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+<h1 id="浅谈一些科技">浅谈一些科技</h1>
+
+<h2 id="本站">本站</h2>
+
+<p>我使用我两年之前的设计，我发现yat主题却是十分简洁大方。</p>
+
+<p>我将会浅谈一些看上去比较需要记住的科技</p>
+
+<p>请及时与我联系。（如果需要。）联系方式是公开发表言论，并且等待我看到的那一天。</p>
+
+<h2 id="spj">spj</h2>
+
+<p>对于spj的书写，往往是搞笑的。因为每个oj都不同。</p>
+
+<p>testlib一家独大，这是不好的。我因此设计了 testlib-lite:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">enum</span> <span class="n">Result</span><span class="p">{</span>
+	<span class="n">_ok</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">_wa</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="o">...</span><span class="nc">A</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">pit_impl</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="n">it</span><span class="p">,</span><span class="n">A</span><span class="p">...</span><span class="n">a</span><span class="p">){</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">strtok</span><span class="p">(</span><span class="n">it</span><span class="p">,</span><span class="s">"%"</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">(</span><span class="kt">void</span><span class="p">)(</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="p">...</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">a</span><span class="p">,</span><span class="n">strtok</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">"%"</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="cp">#define pit(a,b...) pit_impl(&amp;(" " a##s[0]),##b)
+#define exit(sig,va...) pit("exit("#sig "): " va),_exit(sig)
+#define sure(cond,va...) !(cond)&amp;&amp;(exit(_wa,"sure("#cond "): " va),1)
+</span><span class="c1">// enum</span>
+<span class="c1">//do not use %%.</span>
+
+<span class="n">ifstream</span> <span class="n">fin</span><span class="p">,</span><span class="n">out</span><span class="p">,</span><span class="n">ans</span><span class="p">;</span>
+<span class="cp">#define cin fin
+</span>
+<span class="kt">void</span> <span class="nf">arginit</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">sure</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">4</span><span class="p">);</span>
+	<span class="n">fin</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">out</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">ans</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+	<span class="n">atexit</span><span class="p">(</span><span class="o">+</span><span class="p">[](){</span><span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="s">"ok "</span><span class="p">;});</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">presol</span><span class="p">(){</span>
+
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="nf">sol</span><span class="p">(</span><span class="n">ifstream</span><span class="o">&amp;</span><span class="n">cin</span><span class="p">){</span>
+
+	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">signed</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="n">pit</span><span class="p">(</span>
+<span class="s">R"(hello!
+"trust spj" by %.
+% is a placement, like % in printf
+systime: %
+argc: %, argv[0]: %
+warning: %
+)"</span><span class="p">,</span><span class="s">"me"</span><span class="p">,</span><span class="sc">'%'</span><span class="p">,</span><span class="sc">'%'</span><span class="p">,</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">"do not using %%, it makes trouble."</span><span class="n">s</span>
+<span class="p">);</span>
+	<span class="n">arginit</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">);</span>
+
+	
+	<span class="c1">// presol();</span>
+	<span class="c1">// sure(sol(out)==sol(ans));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="allocator">allocator</h2>
+
+<p>allocator 是没有意义的，手动实现它没有用处。</p>
+
+<p>但是这确实是一个复杂的项目，对不对啊</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">maxn</span> <span class="o">=</span> <span class="mf">2e5</span><span class="o">+</span><span class="mi">10</span><span class="p">;</span>
+
+<span class="k">constexpr</span> <span class="kt">int</span> <span class="n">G</span><span class="o">=</span><span class="mi">24</span><span class="p">;</span>
+<span class="cp">#define __lg32(x) (31^__builtin_clz(unsigned(x)))
+</span><span class="k">using</span> <span class="n">uint</span> <span class="o">=</span> <span class="kt">unsigned</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">];</span>
+<span class="k">struct</span> <span class="nc">node</span><span class="p">{</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">p1</span><span class="p">,</span><span class="o">*</span><span class="n">p2</span><span class="p">;</span>
+<span class="p">}</span><span class="n">blk</span><span class="p">[</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">];</span>
+<span class="k">struct</span> <span class="nc">rang</span><span class="p">{</span>
+	<span class="n">node</span><span class="o">*</span><span class="n">p1</span><span class="p">,</span><span class="o">*</span><span class="n">p2</span><span class="p">;</span><span class="c1">//next: opt out this.</span>
+<span class="p">}</span><span class="n">mbr</span><span class="p">[</span><span class="n">G</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">uint</span> <span class="n">msk</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">init</span><span class="p">(){</span>
+	<span class="n">blk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">buf</span><span class="p">,</span><span class="n">end</span><span class="p">(</span><span class="n">buf</span><span class="p">)};</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">G</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+		<span class="n">mbr</span><span class="p">[</span><span class="n">G</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">blk</span><span class="o">+</span><span class="p">((</span><span class="n">i</span><span class="o">?</span><span class="mi">2</span><span class="o">:</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">blk</span><span class="o">+</span><span class="p">(</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+	<span class="p">}</span>
+	<span class="n">msk</span><span class="o">=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">G</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span> <span class="kt">int</span><span class="o">*</span> <span class="nf">fmalloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span><span class="k">noexcept</span><span class="p">{</span>
+	<span class="n">uint</span> <span class="n">let</span><span class="o">=</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span><span class="o">&lt;&lt;</span><span class="n">__lg32</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">msk</span><span class="o">&amp;~</span><span class="p">(</span><span class="n">let</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+	<span class="n">node</span><span class="o">*</span><span class="n">p</span><span class="o">=</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">res</span><span class="o">=</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="p">;</span>
+	<span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="o">+=</span><span class="n">n</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="o">&lt;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p2</span><span class="p">){</span>
+		<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p2</span><span class="o">-</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span><span class="p">);</span>
+		<span class="n">msk</span><span class="o">|=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+		<span class="k">auto</span> <span class="n">q</span><span class="o">=--</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">q</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+		<span class="o">*</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">p1</span> <span class="o">=</span> <span class="n">uint</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="n">blk</span><span class="p">);</span>
+	<span class="p">}</span><span class="k">else</span><span class="o">*</span><span class="n">p</span><span class="o">=</span><span class="p">{};</span>
+	<span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">inblk</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span><span class="p">){</span><span class="k">return</span> <span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="k">sizeof</span> <span class="n">blk</span><span class="o">/</span><span class="k">sizeof</span> <span class="n">blk</span><span class="p">[</span><span class="mi">0</span><span class="p">]);}</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">ffree</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="n">p</span><span class="p">,</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span><span class="k">noexcept</span><span class="p">{</span>
+	<span class="kt">int</span><span class="o">*</span><span class="n">bg</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="o">*</span><span class="n">ed</span><span class="o">=</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">!=</span><span class="n">buf</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">inblk</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+			<span class="k">auto</span><span class="o">&amp;</span><span class="n">cur</span><span class="o">=</span><span class="n">blk</span><span class="p">[</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)];</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">p2</span><span class="o">==</span><span class="n">p</span><span class="p">){</span>
+				<span class="n">bg</span><span class="o">=</span><span class="n">cur</span><span class="p">.</span><span class="n">p1</span><span class="p">;</span>
+				<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="n">bg</span><span class="p">);</span>
+				<span class="n">cur</span><span class="o">=*</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">);</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">inblk</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">)))</span> <span class="p">{</span>
+			<span class="k">auto</span><span class="o">&amp;</span><span class="n">cur</span><span class="o">=</span><span class="n">blk</span><span class="p">[</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">)];</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">p1</span><span class="o">==</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">){</span>
+				<span class="n">ed</span><span class="o">=</span><span class="n">cur</span><span class="p">.</span><span class="n">p2</span><span class="p">;</span>
+				<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">n</span><span class="p">));</span>
+				<span class="n">cur</span><span class="o">=*</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">++</span><span class="p">);</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">==</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p2</span><span class="p">)</span><span class="n">msk</span><span class="o">^=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">__lg32</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="n">bg</span><span class="p">);</span>
+	<span class="n">msk</span><span class="o">|=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">;</span>
+	<span class="o">*--</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">=</span><span class="p">{</span><span class="n">bg</span><span class="p">,</span><span class="n">ed</span><span class="p">};</span>
+	<span class="o">*</span><span class="n">bg</span><span class="o">=*</span><span class="p">(</span><span class="n">ed</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">uint</span><span class="p">(</span><span class="n">mbr</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">p1</span><span class="o">-</span><span class="n">blk</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">fallocator</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="k">typedef</span> <span class="n">T</span>           <span class="n">value_type</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="n">T</span><span class="o">*</span>          <span class="n">pointer</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span>    <span class="n">const_pointer</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="n">T</span><span class="o">&amp;</span>          <span class="n">reference</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span>    <span class="n">const_reference</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="kt">size_t</span>      <span class="n">size_type</span><span class="p">;</span>
+	<span class="k">typedef</span> <span class="kt">ptrdiff_t</span>   <span class="n">difference_type</span><span class="p">;</span>
+	<span class="k">constexpr</span> <span class="k">static</span> <span class="n">size_type</span> <span class="n">rat</span><span class="o">=</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="o">+</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+	<span class="n">pointer</span> <span class="n">allocate</span><span class="p">(</span><span class="n">size_type</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="p">(</span><span class="n">pointer</span><span class="p">)</span><span class="n">fmalloc</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">rat</span><span class="p">);}</span>
+	<span class="kt">void</span> <span class="nf">deallocate</span><span class="p">(</span><span class="n">pointer</span> <span class="n">p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">ffree</span><span class="p">((</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="o">*</span><span class="n">rat</span><span class="p">);</span> <span class="p">}</span> 
+<span class="p">};</span>
+
+<span class="k">namespace</span> <span class="n">test_zhihu</span><span class="p">{</span>
+<span class="k">struct</span> <span class="nc">E</span> <span class="p">{</span><span class="kt">int</span> <span class="n">a</span><span class="p">;</span><span class="n">E</span><span class="p">(</span><span class="kt">int</span> <span class="n">aa</span><span class="p">)</span><span class="o">:</span><span class="n">a</span><span class="p">(</span><span class="n">aa</span><span class="p">){}};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">alloc_t</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">test</span><span class="p">(</span><span class="n">alloc_t</span><span class="o">&amp;&amp;</span><span class="n">alloc</span><span class="o">=</span><span class="n">alloc_t</span><span class="p">())</span> <span class="p">{</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">__PRETTY_FUNCTION__</span><span class="o">&lt;&lt;</span><span class="s">": "</span><span class="p">;</span>
+	<span class="k">auto</span> <span class="n">cc</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ARRAY_COUNT</span> <span class="o">=</span> <span class="mi">1000L</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">TEST_COUNT</span> <span class="o">=</span> <span class="n">ARRAY_COUNT</span> <span class="o">*</span> <span class="mi">100000L</span><span class="p">;</span>
+	<span class="k">static</span> <span class="n">E</span><span class="o">*</span> <span class="n">es</span><span class="p">[</span><span class="n">ARRAY_COUNT</span><span class="p">];</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">es</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">E</span><span class="o">*</span><span class="p">)</span><span class="o">*</span><span class="n">ARRAY_COUNT</span><span class="p">);</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">TEST_COUNT</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">long</span> <span class="kt">long</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">123456789L</span><span class="o">%</span><span class="n">ARRAY_COUNT</span><span class="p">;</span>
+		<span class="n">E</span><span class="o">*</span> <span class="n">e</span> <span class="o">=</span> <span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">e</span><span class="o">-&gt;~</span><span class="n">E</span><span class="p">(),</span><span class="n">alloc</span><span class="p">.</span><span class="n">deallocate</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+		<span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">alloc</span><span class="p">.</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="k">new</span><span class="p">(</span><span class="n">es</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="n">E</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ARRAY_COUNT</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">E</span><span class="o">*</span><span class="n">e</span><span class="o">=</span><span class="n">es</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">n</span><span class="o">+=</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">cc</span><span class="o">&lt;&lt;</span><span class="sc">' '</span><span class="o">&lt;&lt;</span><span class="n">n</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span>
+<span class="k">namespace</span> <span class="n">test_stl_insertend</span> <span class="p">{</span>
+	<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="kt">int</span> <span class="n">per</span><span class="o">=</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">18</span><span class="p">&gt;</span>
+	<span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span><span class="n">t</span><span class="p">,</span><span class="kt">unsigned</span> <span class="n">rnd</span><span class="p">){</span>
+		<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">__PRETTY_FUNCTION__</span><span class="o">&lt;&lt;</span><span class="s">": "</span><span class="p">;</span>
+		<span class="k">auto</span> <span class="n">cur</span><span class="o">=</span><span class="n">clock</span><span class="p">();</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">rnd</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">t</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+			<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">per</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+				<span class="n">t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">per</span><span class="o">-</span><span class="n">i</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">cerr</span><span class="o">&lt;&lt;</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">cur</span><span class="o">&lt;&lt;</span><span class="s">"clocks, "</span><span class="o">&lt;&lt;</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="sc">'\n'</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">signed</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">init</span><span class="p">();</span>
+
+	<span class="n">test_zhihu</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">test_zhihu</span><span class="o">::</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+	<span class="n">test_zhihu</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="n">test_zhihu</span><span class="o">::</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">10000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">10000</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">100</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="p">(</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(),</span><span class="mi">100</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">100000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">1000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">100000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">1000</span><span class="p">);</span>
+
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">allocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">10000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">10000</span><span class="p">);</span>
+	<span class="n">test_stl_insertend</span><span class="o">::</span><span class="n">test</span><span class="o">&lt;</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">fallocator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="mi">10000</span><span class="o">&gt;</span><span class="p">({},</span><span class="mi">10000</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>最唐诗的是，linux的自动管理体系十分超前，以至于这个allocator没有任何意义。</p>
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgwMjQ1NjM1Niw0ODI4MTU1NTNdfQ==
+-->
+</body></html>

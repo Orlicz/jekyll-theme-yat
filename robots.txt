@@ -1,0 +1,1 @@
+Sitemap: //github-yet.orlicz.top/jekyll-theme-yat/sitemap.xml
